@@ -1,0 +1,87 @@
+<meta charset="UTF-8">
+
+<h1>Já pensei! Qual é o número?</h1>
+
+<input />
+<button>Adivinhar?</button>
+
+<script>
+    function mostra(frase) {
+        var p = document.createElement("p");
+        p.textContent = frase;
+        document.body.appendChild(p);
+    }
+
+    function sorteia() {
+        return Math.round(Math.random() * 10);
+    }
+
+    function sorteiaNumeros(quantidade) {
+        var numerosPensados = [];
+        var numero = 1;
+
+        while (numero <= quantidade) {
+            var numeroAleatorio = sorteia();
+            var achou = false;
+
+            if (numeroAleatorio !== 0) {
+                for (var posicao = 0; posicao < numerosPensados.length; posicao++) {
+                    if (numerosPensados[posicao] == numeroAleatorio) {
+                        achou = true;
+                        break;
+                    }
+                }
+
+                if (!achou) {
+                    numerosPensados.push(numeroAleatorio);
+                    numero++;
+                }
+            }
+        }
+
+        return numerosPensados;
+    }
+
+    var numerosPensados = sorteiaNumeros(3);
+    var input = document.querySelector("input");
+    var button = document.querySelector("button");
+
+    input.focus();
+
+    function verifica() {
+        var chute = parseInt(input.value);
+        var achou = false;
+
+        for (var i = 0; i < numerosPensados.length; i++) {
+            if (chute === numerosPensados[i]) {
+                achou = true;
+                break;
+            }
+        }
+
+        if (achou) {
+            alert("Uau! Você acertou!");
+            mostra("Parabéns! Um dos números era " + chute + ". Os números eram: " + numerosPensados.join(", "));
+        } else {
+            // Dicas se chutou muito alto ou muito baixo
+            var maior = false;
+            for (var i = 0; i < numerosPensados.length; i++) {
+                if (chute < numerosPensados[i]) {
+                    maior = true;
+                    break;
+                }
+            }
+
+            if (maior) {
+                alert("Tente um número maior!");
+            } else {
+                alert("Tente um número menor!");
+            }
+        }
+
+        input.value = "";
+        input.focus();
+    }
+
+    button.onclick = verifica;
+</script>
